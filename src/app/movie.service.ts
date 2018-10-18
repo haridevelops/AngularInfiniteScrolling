@@ -13,11 +13,13 @@ export class MovieService {
   tmdbEndpoint: string;
   apiKey: string;
   imagePrefix: string;
+  searchEndpoint: string;
 
   constructor(private http: HttpClient) { 
     this.tmdbEndpoint = 'https://api.themoviedb.org/3/movie';
     this.apiKey = 'api_key=269ff5015d6a3b3ce62163dd525c8713';
     this.imagePrefix = 'https://image.tmdb.org/t/p/w500';
+    this.searchEndpoint = 'https://api.themoviedb.org/3/search';
   }
 
   getMovies(type: string, page: number = 1): Observable<Array<Movie>> {
@@ -30,7 +32,6 @@ export class MovieService {
         map(this.transformIDtoMovieId.bind(this))
       );
   }
-
 
   transformIDtoMovieId(movies): Array<Movie>  {
     return movies.map(movie => {
@@ -51,5 +52,14 @@ export class MovieService {
     return response['results'];
   }
 
-
+  searchMovie(searchString: string): Observable<Array<Movie>> {
+    const url = `${this.searchEndpoint}/movie?${this.apiKey}&&language=en-US&page=1&include_adult=false&query=${searchString}`;
+    if(searchString.length>0) {
+      return this.http.get(url).pipe(
+        retry(3),
+        map(this.pickResultsFromResponse),
+        map(this.transformPosterPath.bind(this))
+      );
+    }
+  }
 }

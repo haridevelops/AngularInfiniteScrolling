@@ -6,13 +6,13 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AppComponent } from './app.component';
 import { MovieService } from "./movie.service";
-import { DebounceComponent } from './debounce/debounce.component';
+import { TypeHeadDirective } from './type-head.directive';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DebounceComponent
+    TypeHeadDirective
   ],
   imports: [
     BrowserModule,
